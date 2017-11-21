@@ -23,23 +23,22 @@ public class CheckBattryLevelService extends Service
     public static boolean result=false;
 
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO Auto-generated method stub
+    public IBinder onBind(Intent arg0) {
+
         return null;
     }
 
     @Override
     public void onCreate() {
 
-        player = MediaPlayer.create(this, R.raw.sond2);
         myGlobal=new MyGlobal();
         sharedPreferences=getApplicationContext().getSharedPreferences("SelectedVlues",MODE_PRIVATE);
         SelectedValue=sharedPreferences.getInt("alermvalues", 0);
+
     }
 
-    @Override
-    public void onStart(Intent intent, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
         Log.e("SERVICE","Service started");
 
         new Thread(new Runnable() {
@@ -57,6 +56,23 @@ public class CheckBattryLevelService extends Service
                 }
             }
         }).start();
+        return  START_STICKY;
+    }
+
+    public void onStart(Intent intent, int startId) {
+        // TO DO
+    }
+
+    public IBinder onUnBind(Intent arg0) {
+        // TO DO Auto-generated method
+        return null;
+    }
+
+    public void onStop() {
+
+    }
+
+    public void onPause() {
 
     }
 
@@ -67,19 +83,20 @@ public class CheckBattryLevelService extends Service
         Log.e("SERVICE","Service Destroy");
     }
 
+    @Override
+    public void onLowMemory() {
+
+    }
+
     public void CheckingData(){
 
         Log.e("SERVICE","CheckingData");
         int batteryLevel=myGlobal.getBatteryPercentage(getApplicationContext());
+        Log.e("SERVICE",String.valueOf(batteryLevel));
 
-        if (SelectedValue <= (batteryLevel))
+        if (SelectedValue <=(batteryLevel))
         {
             StratMusic();
-        }
-        if(myGlobal.CheckBatteryIsCharging(getApplicationContext())==false)
-        {
-            Intent svc4=new Intent(getApplicationContext(), CheckBattryLevelService.class);
-            stopService(svc4);
         }
     }
 
@@ -87,15 +104,14 @@ public class CheckBattryLevelService extends Service
 
         if(result==false)
         {
-            try {
+            try
+            {
+                player = MediaPlayer.create(this, R.raw.sond2);
+                player.setLooping(true); // Set looping
+                player.setVolume(100, 100);
+                player.start();
+                result = true;
 
-                if (!player.isPlaying()) {
-                    player.setLooping(true); // Set looping
-                    player.setVolume(100, 100);
-                    player.start();
-                    player.prepare();
-                    result = true;
-                }
             }
             catch (Exception e)
             {
@@ -108,7 +124,8 @@ public class CheckBattryLevelService extends Service
         try
         {
             result = false;
-            if (player.isPlaying()) {
+            if (player.isPlaying())
+            {
                 player.stop();
                 player.release();
             }

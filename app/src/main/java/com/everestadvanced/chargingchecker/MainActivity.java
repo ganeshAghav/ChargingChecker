@@ -101,7 +101,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                         editor.putInt("alermvalues", SelectedVlues);
                         editor.commit();
 
-                        startService(new Intent(MainActivity.this, CheckBattryLevelService.class));
+                        Intent svc3=new Intent(getApplicationContext(), CheckBattryLevelService.class);
+                        startService(svc3);
 
                         Toast.makeText(getApplicationContext(),"Alarm set successfully !!!",Toast.LENGTH_LONG).show();
                     }
@@ -124,8 +125,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
             @Override
             public void onClick(View view) {
 
-                Intent svc4=new Intent(MainActivity.this, CheckBattryLevelService.class);
+                Intent svc4=new Intent(getApplicationContext(), CheckBattryLevelService.class);
                 stopService(svc4);
+
                 Toast.makeText(getApplicationContext(),"Alarm Stop successfully !!!",Toast.LENGTH_LONG).show();
             }
         });
@@ -142,5 +144,4 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
 }
