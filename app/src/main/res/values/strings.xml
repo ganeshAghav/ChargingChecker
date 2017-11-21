@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ChargingChecker</string>
+    <string name="spinnertilte">Select Charging Level</string>
+</resources>
